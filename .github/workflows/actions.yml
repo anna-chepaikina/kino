@@ -2,7 +2,7 @@ name: run main.py
 
 on:
   schedule:
-    - cron: '52 20 * * *' # At 20:40 UTC each day
+    - cron: '00 21 * * *' # At 20:40 UTC each day
 
 jobs:
   build:
@@ -32,7 +32,7 @@ jobs:
           git diff --quiet HEAD || (git commit -a -m "updated table" --allow-empty) 
 
       - name: push changes
-        uses: ad-m/github-push-action@master
+        uses: ad-m/github-push-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN}}
           branch: main
