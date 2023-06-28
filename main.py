@@ -157,5 +157,5 @@ css_style = """
 html_content = css_style + html_with_scrolling
 
 # Save the HTML to a file
-with open("horaires_pour_aujourdhui.html", 'w') as file:
+with open("index.html", 'w') as file:
     file.write(html_content)
