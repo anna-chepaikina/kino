@@ -3,6 +3,7 @@ import pandas as pd
 import re
 import requests
 from bs4 import BeautifulSoup
+from markdownify import markdownify
 
 # %%
 cinema_des_ecoles = "https://www.allocine.fr/seance/salle_gen_csalle=C0071.html"
@@ -92,6 +93,69 @@ for cinema in cinema_list:
 # convert json to html
 df = pd.DataFrame(json_list)
 df = df.sort_values(by=["horaires"])
-df.to_html("horaires_pour_aujourdhui.html", encoding="utf-8", index=False)
+#df.to_html("horaires_pour_aujourdhui.html", encoding="utf-8", index=False)
 
+# Apply styles to the DataFrame
+# Apply styles to the DataFrame
+styled_df = df.style\
+    .set_table_styles([
+        {
+            'selector': 'table',
+            'props': [
+                ('border-collapse', 'collapse'),
+                ('width', '100%'),
+                ('color', '#333'),
+                ('font-family', "'Courier New', Courier, monospace")
+            ]
+        },
+        {
+            'selector': 'th',
+            'props': [
+                ('background-color', '#f2f2f2'),
+                ('border', 'none'),
+                ('padding', '12px 8px'),
+                ('font-weight', 'bold'),
+                ('text-align', 'left'),
+                ('color', '#333'),
+                ('border-bottom', '2px solid #ddd')
+            ]
+        },
+        {
+            'selector': 'td',
+            'props': [
+                ('border', 'none'),
+                ('padding', '8px'),
+                ('color', '#666')
+            ]
+        }
+    ])\
+    .set_properties(subset=pd.IndexSlice[:, ['titre']], **{'font-weight': 'bold'})
 
+# Convert styled DataFrame to HTML
+styled_html = styled_df.to_html(index=False)
+
+# Wrap the table with a div and add scrolling styles
+html_with_scrolling = f"""
+<div style="overflow-x: auto;">
+    {styled_html}
+</div>
+"""
+# Create the CSS style for the typewriter-style class
+css_style = """
+<style>
+.typewriter-style {
+    white-space: pre;
+    font-family: Courier, monospace;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.4;
+}
+</style>
+"""
+
+# Combine the CSS style and the HTML content
+html_content = css_style + html_with_scrolling
+
+# Save the HTML to a file
+with open("horaires_pour_aujourdhui.html", 'w') as file:
+    file.write(html_content)
