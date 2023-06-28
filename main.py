@@ -62,6 +62,7 @@ for cinema in cinema_list:
             film_actors = ""
         try:
             film_date = l.find("div", class_="text").text.strip()
+            film_date = film_date.split("-")[0].strip()
             #print(f"Seance : {film_date}")
         except:
             film_date = ""
@@ -77,8 +78,7 @@ for cinema in cinema_list:
             film_hour = ""
         #print(f"Hour : {film_hour}")
         # save
-        dico = {}
-        dico["cinema"] = cinema
+        dico = {}    
         dico["titre"] = film_title
         dico["director"] = film_director
         dico["actors"] = film_actors
@@ -86,6 +86,7 @@ for cinema in cinema_list:
         dico["synopsis"] = film_synopsis
         dico["jour"] = film_date
         dico["horaires"] = film_hour
+        dico["cinema"] = cinema
         json_list.append(dico)
     
 
