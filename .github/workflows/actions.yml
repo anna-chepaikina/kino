@@ -7,7 +7,7 @@ permissions: # allow the action to push changes to the repository
 
 on:
   schedule:
-    - cron: '40 15 * * *' # At 08:00 UTC each day
+    - cron: '25 16 * * *' # At 08:00 UTC each day
 
 jobs:
   build:
@@ -43,15 +43,26 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN}}
           branch: main
 
-  refresh:
+  rebuild-pages:
     runs-on: ubuntu-latest
-    steps:
-      - name: Trigger GitHub pages rebuild
-        run: |
-                curl --fail --request POST \
-                    --url  https://api.github.com/repos/anna-chepaikina/kino/pages/builds \
-                    --header "Authorization: Bearer $USER_TOKEN"
-                env:
-                  # You must create a personal token with repo access as GitHub does
-                  # not yet support server-to-server page builds.
-        USER_TOKEN: TodayInParis
+        
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v2
+        
+        - name: Set up Node.js
+          uses: actions/setup-node@v2
+          with:
+              node-version: '14'
+        
+        - name: Install dependencies
+          run: npm ci
+        
+        - name: Rebuild GitHub Pages
+          run: npm run build  # Replace with your build command
+        
+        - name: Deploy to GitHub Pages
+          uses: peaceiris/actions-gh-pages@v3
+          with:
+              github_token: ${{ secrets.GITHUB_TOKEN }}
+              publish_dir: ./  # Replace with your build output directory
