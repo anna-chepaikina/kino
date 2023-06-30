@@ -7,7 +7,7 @@ permissions: # allow the action to push changes to the repository
 
 on:
   schedule:
-    - cron: '53 17 * * *' # At 08:00 UTC each day
+    - cron: '00 06 * * *' # At 08:00 UTC each day
 
 jobs:
   build:
